@@ -1,0 +1,150 @@
+---
+# Supported options: 
+#   sn-nature:       Style for submissions to Nature Portfolio journals
+#   sn-basic:        Basic Springer Nature Reference Style/Chemistry Reference Style
+#   sn-mathphys:     Math and Physical Sciences Reference Style
+#   sn-aps:          American Physical Society (APS) Reference Style
+#   sn-vancouver:    Vancouver Reference Style
+#   sn-apa:          APA Reference Style 
+#   sn-chicago:      Chicago-based Humanities Reference Style
+#   default:         Default
+
+classoptions: 
+  - sn-basic      
+  # - Numbered      # Optional: Use numbered references instead of namedate references (only for sn-nature, sn-basic, sn-vancouver, sn-chicago, sn-mathphys or sn-nature)
+  # - referee       # Optional: Use double line spacing 
+  # - lineno        # Optional: Add line numbers
+  # - iicol         # Optional: Double column layour
+  
+# TAG submission guidelines: https://link.springer.com/journal/122/submission-guidelines
+
+title: "Impact of pedigree depth in the Australian strawberry breeding program: variance component estimation, prediction accuracies and estimation of clonal and breeding values"
+titlerunning: "Pedigree depth in the Australian strawberry breeding program"
+
+authors: 
+  - prefix: Dr.
+    firstname: Ky
+    lastname: Mathews
+    degrees: PhD
+    email: ky.mathews@daf.qld.gov.au
+    affiliation: [1]
+    corresponding: TRUE
+    #equalcont: These authors contributed equally to this work.
+    
+  - prefix: Dr.
+    firstname: Katie
+    lastname: O'Connor
+    degrees: PhD
+    email: katie.oconnor@daf.qld.gov.au
+    affiliation: [1]
+    
+  - prefix: Dr.
+    firstname: Jodi
+    lastname: Neal
+    degrees: PhD
+    email: Jodi.Neal@daf.qld.gov.au
+    affiliation: [1]
+
+
+affiliations:
+  - number: 1
+    corresponding: TRUE
+    info:
+      orgdiv: Department of Primary Industries
+      orgname: Queensland Government
+    address:
+        street: Maroochy Research Facility, 47 Mayers Road
+        city: Nambour
+        postcode: 4560
+        state: Queensland
+        country: Australia
+    
+  
+keywords: # 4-6
+  - A matrix
+  - relatedness
+  - yield
+
+abstract: |
+  Key message: Less than 30 words summarising the main achievement.
+
+  Abstract should be around 200 words.
+
+bibliography: bibliography.bib
+
+header-includes: |
+  %% Per the spinger doc, new theorem styles can be included using built in style, 
+  %% but it seems the don't work so commented below
+  %\theoremstyle{thmstyleone}%
+  \newtheorem{theorem}{Theorem}%  meant for continuous numbers
+  %%\newtheorem{theorem}{Theorem}[section]% meant for sectionwise numbers
+  %% optional argument [theorem] produces theorem numbering sequence instead of independent numbers for Proposition
+  \newtheorem{proposition}[theorem]{Proposition}%
+  %%\newtheorem{proposition}{Proposition}% to get separate numbers for theorem and proposition etc.
+
+  %% \theoremstyle{thmstyletwo}%
+  \theoremstyle{remark}
+  \newtheorem{example}{Example}%
+  \newtheorem{remark}{Remark}%
+
+  %% \theoremstyle{thmstylethree}%
+  \theoremstyle{definition}
+  \newtheorem{definition}{Definition}%
+
+output: 
+  bookdown::pdf_book:
+    base_format: rticles::springer_article
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,
+                      out.extra = "")  # This forces knitr to label all figures.
+```
+
+# Introduction {#sec:intro}
+
+```{r secintro, child = c('Sections/1-Introduction.Rmd')}
+```
+
+# Materials and methods {#sec:meth}
+
+```{r secmeth, child = c('Sections/2-Methods.Rmd')}
+```
+
+# Results {#sec:res}
+
+```{r secres, child = c('Sections/3-Results.Rmd')}
+```
+
+# Discussion {#sec:disc}
+
+```{r secdisc, child = c('Sections/4-Discussion.Rmd')}
+```
+
+# Conclusions
+
+We found...
+
+\backmatter
+
+\bmhead{Supplementary information}
+
+If your article has accompanying supplementary file/s please state so here.
+
+\bmhead{Acknowledgments}
+
+The authors thank present and past members of the Australian Strawberry Breeding Program and staff at the Maroochy Research Facility for the involvement in field preparation and maintenance, plant propagation, plant maintenance, fruit harvesting and processing, data collection, etc etc. 
+
+# Declarations {.unnumbered}
+
+## Funding
+The Australian Strawberry Breeding Program has been funded by Hort Innovation using the strawberry research and development levy, with co-contributions from the Queensland Government through its Department of Primary Industries and funds from the Australian Government.
+
+## Competing Interestions
+The authors have no relevant financial or non-financial interests to disclose.
+
+## Authors' Contributions
+KM and KO developed the idea. KM wrote analytical R code. etc etc. 
+
+## Data Availability
+The datasets generated during and/or analysed during the current study are available from the corresponding author on reasonable request.

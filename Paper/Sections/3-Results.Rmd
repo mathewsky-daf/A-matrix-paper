@@ -1,0 +1,12 @@
+<!-- Results -->
+
+Figures and tables are labeled with a prefix (fig or tab, respectively) plus the chunk label. 
+Other environments such as equation and align can be labelled via the `\label{#label}` command inside or just below the `\caption{}` command.
+You can then use the label for cross-reference. As an example, consider
+the chunk label declared for Figure\ \ref{fig:fig1} which is
+fig1. 
+To cross-reference it, use the command
+`Figure \ref{fig:fig1}`, for which it comes up as
+"Figure\ \ref{fig:fig1}".
+
+To reference line numbers in an algorithm, consider the label declared for the line number 2 of Algorithm\ \ref{algo1} is `\label{algln2}`. To cross-reference it, use the command `\ref{algln2}` for which it comes up as line\ \ref{algln2} of Algorithm\ \ref{algo1}.

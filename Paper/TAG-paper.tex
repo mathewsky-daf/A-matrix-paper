@@ -1,0 +1,203 @@
+%Version 2.1 April 2023
+% See section 11 of the User Manual for version history
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                                                                 %%
+%% Please do not use \input{...} to include other tex files.       %%
+%% Submit your LaTeX manuscript as one .tex document.              %%
+%%                                                                 %%
+%% All additional figures and files should be attached             %%
+%% separately and not embedded in the \TeX\ document itself.       %%
+%%                                                                 %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[sn-basic,pdflatex]{sn-jnl}
+
+%%%% Standard Packages
+%%<additional latex packages if required can be included here>
+
+\usepackage{graphicx}%
+\usepackage{multirow}%
+\usepackage{amsmath,amssymb,amsfonts}%
+\usepackage{amsthm}%
+\usepackage{mathrsfs}%
+\usepackage[title]{appendix}%
+\usepackage{xcolor}%
+\usepackage{textcomp}%
+\usepackage{manyfoot}%
+\usepackage{booktabs}%
+\usepackage{algorithm}%
+\usepackage{algorithmicx}%
+\usepackage{algpseudocode}%
+\usepackage{listings}%
+%%%%
+
+%%%%%=============================================================================%%%%
+%%%%  Remarks: This template is provided to aid authors with the preparation
+%%%%  of original research articles intended for submission to journals published
+%%%%  by Springer Nature. The guidance has been prepared in partnership with
+%%%%  production teams to conform to Springer Nature technical requirements.
+%%%%  Editorial and presentation requirements differ among journal portfolios and
+%%%%  research disciplines. You may find sections in this template are irrelevant
+%%%%  to your work and are empowered to omit any such section if allowed by the
+%%%%  journal you intend to submit to. The submission guidelines and policies
+%%%%  of the journal take precedence. A detailed User Manual is available in the
+%%%%  template package for technical guidance.
+%%%%%=============================================================================%%%%
+
+%% Per the spinger doc, new theorem styles can be included using built in style, 
+%% but it seems the don't work so commented below
+%\theoremstyle{thmstyleone}%
+\newtheorem{theorem}{Theorem}%  meant for continuous numbers
+%%\newtheorem{theorem}{Theorem}[section]% meant for sectionwise numbers
+%% optional argument [theorem] produces theorem numbering sequence instead of independent numbers for Proposition
+\newtheorem{proposition}[theorem]{Proposition}%
+%%\newtheorem{proposition}{Proposition}% to get separate numbers for theorem and proposition etc.
+
+%% \theoremstyle{thmstyletwo}%
+\theoremstyle{remark}
+\newtheorem{example}{Example}%
+\newtheorem{remark}{Remark}%
+
+%% \theoremstyle{thmstylethree}%
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}%
+
+
+
+\raggedbottom
+
+
+
+
+% tightlist command for lists without linebreak
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+% From pandoc table feature
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+
+
+
+
+\begin{document}
+
+
+\title[Pedigree depth in the Australian strawberry breeding program]{Impact of pedigree depth in the Australian strawberry breeding program: variance component estimation, prediction accuracies and estimation of clonal and breeding values}
+
+%%=============================================================%%
+%% Prefix	-> \pfx{Dr}
+%% GivenName	-> \fnm{Joergen W.}
+%% Particle	-> \spfx{van der} -> surname prefix
+%% FamilyName	-> \sur{Ploeg}
+%% Suffix	-> \sfx{IV}
+%% NatureName	-> \tanm{Poet Laureate} -> Title after name
+%% Degrees	-> \dgr{MSc, PhD}
+%% \author*[1,2]{\pfx{Dr} \fnm{Joergen W.} \spfx{van der} \sur{Ploeg} \sfx{IV} \tanm{Poet Laureate}
+%%                 \dgr{MSc, PhD}}\email{iauthor@gmail.com}
+%%=============================================================%%
+
+\author*[1]{\pfx{Dr.} \fnm{Ky} \sur{Mathews} \dgr{PhD}}\email{\href{mailto:ky.mathews@daf.qld.gov.au}{\nolinkurl{ky.mathews@daf.qld.gov.au}}}
+
+\author[1]{\pfx{Dr.} \fnm{Katie} \sur{O'Connor} \dgr{PhD}}\email{\href{mailto:katie.oconnor@daf.qld.gov.au}{\nolinkurl{katie.oconnor@daf.qld.gov.au}}}
+
+\author[1]{\pfx{Dr.} \fnm{Jodi} \sur{Neal} \dgr{PhD}}\email{\href{mailto:Jodi.Neal@daf.qld.gov.au}{\nolinkurl{Jodi.Neal@daf.qld.gov.au}}}
+
+
+
+  \affil*[1]{\orgdiv{Department of Primary Industries}, \orgname{Queensland Government}, \orgaddress{\city{Nambour}, \country{Australia}, \postcode{4560}, \state{Queensland}, \street{Maroochy Research Facility, 47 Mayers Road}}}
+
+\abstract{Key message: Less than 30 words summarising the main achievement.
+
+Abstract should be around 200 words.}
+
+\keywords{A matrix, relatedness, yield}
+
+
+
+\maketitle
+
+\section{Introduction}\label{sec:intro}
+
+Ways of finding the best depth.
+What other people have found.
+
+Atkin 2009 and Yang 2016
+
+Katie's musings, ignore for now:
+Others' results
+``In principle, more complete pedigree will lead to more efficient use of phenotypic information of relatives. But the distant ancestors have very little impact on the construction of relationships between candidates and their relatives with records. Thus it may be not necessary to keep distant ancestors in pedigree data. Moreover, the depth of pedigree could have a big impact on estimates of genetic parameters. Genetic parameters estimated using a linear mixed model reflect the genetic parameters of conceptual base population in which there is no genetic relationship between individuals (Kennedy and Moxley, 1975; Van Der Werf and De Boer, 1990; Bijma et al., 1997). When pedigree is traced back to distant ancestors, the base population will shift to an early generation, and the inbreeding coefficient in the resulting relationship matrix will increase. This implies that in a closed population, additive genetic variance estimated using a deeper pedigree could be larger than that obtained using a shallow pedigree.
+For each population, genetic parameters and breeding values were estimated using various datasets which differed in number of
+generations in phenotypic data and pedigree data. Six phenotypic data sets were created; each included recent 1, 2, 3, 5, 10 or 20
+generations of records. The pedigree datasets included the generations in phenotypic data and plus 1, 2, 3, 5, 10 or all ancestral
+generations, depending on the corresponding phenotypic data set. For example, for phenotypic data set comprising 20 generations,
+the pedigree data was possible to include 5 more generations at maximum, since the total number of generations available was 25.
+For each scenario of data set, 50 replicates were analyzed.
+The effect of phenotypic information from previous generations and pedigree depth on EBV was assessed by reliability and unbiasedness of EBV for animals in the last generation. Reliability of EBV (rEBV\^{}2) was measured as squared correlation between EBV and true breeding value (TBV).'' - \citet{Yang2016}.
+
+In their study of the impact of pedigree depth on model convergence in pigs, \citet{Pocrnic2017} investigated A matrices with depths of 1 to 5 (where a depth of 3 included all animals with phenotypes or genotypes plus 3 generations of ancestors). They found that\ldots. \citep{Pocrnic2017}.
+Across different study organisms, optimal pedigree depth varies, for example, results found that three generations of phenotypic records plus an additional two generations was sufficient in simulated pig populations \citep{Yang2016}, whilst \citet{Atkin2009} found that a minimum of three sugarcane generations was required to accurately estimate BVs of parents.
+
+\section{Materials and methods}\label{sec:meth}
+
+\section{Results}\label{sec:res}
+
+Figures and tables are labeled with a prefix (fig or tab, respectively) plus the chunk label.
+Other environments such as equation and align can be labelled via the \texttt{\textbackslash{}label\{\#label\}} command inside or just below the \texttt{\textbackslash{}caption\{\}} command.
+You can then use the label for cross-reference. As an example, consider
+the chunk label declared for Figure~\ref{fig:fig1} which is
+fig1.
+To cross-reference it, use the command
+\texttt{Figure\ \textbackslash{}ref\{fig:fig1\}}, for which it comes up as
+``Figure~\ref{fig:fig1}''.
+
+To reference line numbers in an algorithm, consider the label declared for the line number 2 of Algorithm~\ref{algo1} is \texttt{\textbackslash{}label\{algln2\}}. To cross-reference it, use the command \texttt{\textbackslash{}ref\{algln2\}} for which it comes up as line~\ref{algln2} of Algorithm~\ref{algo1}.
+
+\section{Discussion}\label{sec:disc}
+
+\section{Conclusions}\label{conclusions}
+
+We found\ldots{}
+
+\backmatter
+
+\bmhead{Supplementary information}
+
+If your article has accompanying supplementary file/s please state so here.
+
+\bmhead{Acknowledgments}
+
+The authors thank present and past members of the Australian Strawberry Breeding Program and staff at the Maroochy Research Facility for the involvement in field preparation and maintenance, plant propagation, plant maintenance, fruit harvesting and processing, data collection, etc etc.
+
+\section*{Declarations}\label{declarations}
+\addcontentsline{toc}{section}{Declarations}
+
+\subsection{Funding}\label{funding}
+
+The Australian Strawberry Breeding Program has been funded by Hort Innovation using the strawberry research and development levy, with co-contributions from the Queensland Government through its Department of Primary Industries and funds from the Australian Government.
+
+\subsection{Competing Interestions}\label{competing-interestions}
+
+The authors have no relevant financial or non-financial interests to disclose.
+
+\subsection{Authors' Contributions}\label{authors-contributions}
+
+KM and KO developed the idea. KM wrote analytical R code. etc etc.
+
+\subsection{Data Availability}\label{data-availability}
+
+The datasets generated during and/or analysed during the current study are available from the corresponding author on reasonable request.
+
+\bibliography{bibliography.bib}
+
+
+\end{document}
