@@ -6,17 +6,4 @@ What other people have found.
 Atkin 2009 and Yang 2016
 
 
-Katie's musings, ignore for now:
-Others' results
-"In principle, more complete pedigree will lead to more efficient use of phenotypic information of relatives. But the distant ancestors have very little impact on the construction of relationships between candidates and their relatives with records. Thus it may be not necessary to keep distant ancestors in pedigree data. Moreover, the depth of pedigree could have a big impact on estimates of genetic parameters. Genetic parameters estimated using a linear mixed model reflect the genetic parameters of conceptual base population in which there is no genetic relationship between individuals (Kennedy and Moxley, 1975; Van Der Werf and De Boer, 1990; Bijma et al., 1997). When pedigree is traced back to distant ancestors, the base population will shift to an early generation, and the inbreeding coefficient in the resulting relationship matrix will increase. This implies that in a closed population, additive genetic variance estimated using a deeper pedigree could be larger than that obtained using a shallow pedigree.
-For each population, genetic parameters and breeding values were estimated using various datasets which differed in number of
-generations in phenotypic data and pedigree data. Six phenotypic data sets were created; each included recent 1, 2, 3, 5, 10 or 20
-generations of records. The pedigree datasets included the generations in phenotypic data and plus 1, 2, 3, 5, 10 or all ancestral
-generations, depending on the corresponding phenotypic data set. For example, for phenotypic data set comprising 20 generations,
-the pedigree data was possible to include 5 more generations at maximum, since the total number of generations available was 25.
-For each scenario of data set, 50 replicates were analyzed.
-The effect of phenotypic information from previous generations and pedigree depth on EBV was assessed by reliability and unbiasedness of EBV for animals in the last generation. Reliability of EBV (rEBV^2) was measured as squared correlation between EBV and true breeding value (TBV)." - @Yang2016.
 
-
-In their study of the impact of pedigree depth on model convergence in pigs, @Pocrnic2017 investigated A matrices with depths of 1 to 5 (where a depth of 3 included all animals with phenotypes or genotypes plus 3 generations of ancestors). They found that.... [@Pocrnic2017]. 
-Across different study organisms, optimal pedigree depth varies, for example, results found that three generations of phenotypic records plus an additional two generations was sufficient in simulated pig populations [@Yang2016], whilst @Atkin2009 found that a minimum of three sugarcane generations was required to accurately estimate BVs of parents. 
