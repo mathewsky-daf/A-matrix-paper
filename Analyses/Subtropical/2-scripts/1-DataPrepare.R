@@ -99,6 +99,9 @@ ainv.ls <- lapply(ped.ls, function(x){x$self <- 0
 ainv.ls[[8]] <- ainv.ls[[7]]
 ainv.ls[[8]]$a.ainv <- AIsweep(ainv.ls[[8]]$a.ainv, keep = gkeep.name)
 ainv.ls[[8]]$p.nrm <- AIsweep(ainv.ls[[8]]$p.nrm, keep = gkeep.name)
+# KO getting this error 250319 for above line
+# Error in y[(x[, 2] - 1) * nrow + x[, 1]] <- x[, 3] : 
+#   only 0's may be mixed with negative subscripts
 
 names(ainv.ls) <- c(paste0("A", 2:7), "AF", "AI")
 
