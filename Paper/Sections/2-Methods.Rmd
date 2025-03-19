@@ -1,3 +1,5 @@
 <!-- Methods -->
 
 While early studies of inheritance in octoploid strawberry found meiotic behavior to be a mix between disomic and polysomic [e.g. @LerceteauKohler2003], more recent studies have found that inheritance is disomic [@RousseauGueutin2008; @Tennessen2014; @Sargent2016; @Hardigan2020]. Therefore, we used the option ploidy = 2 when constructing the A matrix in AGHmatrix. 
+
+Recent studies have found that a small amount of genetic variance could be attributed to dominance [@Feldmann2024; @Sleper2025]. Thus, we also constructed a dominance relationship matrix in AGHmatrix using the option dominance = TRUE. 
