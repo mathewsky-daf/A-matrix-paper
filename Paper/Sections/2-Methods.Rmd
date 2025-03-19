@@ -4,4 +4,6 @@ While early studies of inheritance in octoploid strawberry found meiotic behavio
 
 *If we do explore an octoploid A matrix and find that it is a better fit than diploid, then we should explore different levels of double reduction (the probability that two sister chromatids pass into the same gamete), as per @Amadeu2016.*
 
+*If we do explore an octoploid A matrix and find that it is a better fit than diploid, then we should explore different levels of double reduction (the probability that two sister chromatids pass into the same gamete), as per @Amadeu2016.*
+
 Recent studies have found that a small amount of genetic variance could be attributed to dominance [@Feldmann2024; @Sleper2025]. Thus, we also constructed a dominance relationship matrix in AGHmatrix using the option dominance = TRUE. 
