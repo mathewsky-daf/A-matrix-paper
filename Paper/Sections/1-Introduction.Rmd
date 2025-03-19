@@ -6,4 +6,4 @@ What other people have found.
 Atkin 2009 and Yang 2016
 
 
-
+Various papers analysing strawbery data have included relationship matrices constructed of somewhat arbitrary pedigree generation depths, ranging from four to 20 [@Whitaker2012; @Kennedy2014; @Osorio2014; @Paynter2014].
