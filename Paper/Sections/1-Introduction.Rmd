@@ -7,3 +7,7 @@ Atkin 2009 and Yang 2016
 
 
 Various papers analysing strawbery data have included relationship matrices constructed of somewhat arbitrary pedigree generation depths, ranging from four to 20 [@Whitaker2012; @Kennedy2014; @Osorio2014; @Paynter2014].
+
+Repeated measures or longitudinal analysis of yield data does not appear to be standard practice in strawberry, with research groups instead summing individual harvests to obtain a total season yield (e.g. @Cockerton2021; @Gezan2017; @Fan2024; @Osorio2021). Similarly for fruit weight, a common method is to divide total (marketable) yield by the total number of (marketable) fruit across a season (e.g. @Sleper2025; @Osorio2021; @Whitaker2012), or average across all harvests to obtain a mean weight (e.g. @Prohaska2024). 
+
+Repeated measures analyses have been used in other horticultural crops to model traits measured temporally, for example in macadamia [@Hardner2023], sweet cherry [@Piaskowski2018] and.... *Ky to insert her favourite examples (though perhaps we need to reword "horticultural")*. 
