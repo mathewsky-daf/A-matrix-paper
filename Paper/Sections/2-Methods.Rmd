@@ -1,7 +1,15 @@
 <!-- Methods -->
 
-## Experimental design and phenotyping
+## Field trials and phenotyping
+The ASBP runs a clonally replicated field trial for each of the three growing regions each year. The subtropical and temperate trials are hosted at DPI-operated facilities in Nambour in South East Queensland, and Wandin North in Victoria, respectively. The Mediterranean clonal trial is hosted at a grower's property, with some incomplete data; data from the Mediterranean region are thus not included in the current study. 
 
+Plug plants were used each year at Nambour, with ASBP variety 'Red Rhapsody' used as a check each year. Bare-rooted runners, produced from runner propagation in sand beds, were used at Wandin in 2021-22 and 2022-23 seasons, a combination of bare-rooted runners and plugs were used in 2023-24, and plugs were exclusively used in 204-25. Large plant crowns were occasionally broken into pieces to obtain required plant numbers. Across the four trial years, a combination of varieties 'Albion', 'Monterey' and 'Cabrillo' were used as checks.
+
+Trial design.
+
+The subtropical trials are planted in March (southern-hemisphere autumn), fruit begins to ripen in April or May, and harvest continues from first fruit through to the end of August (winter). The temperate trials are planted between April and June, with the first fruits ripening in October. Harvest continued through to the end of February in the 2021-22 season, end of March in 2022-23, end of May in 2023-24 and XXX in 2024-25. 
+
+Each week, fruit (>70% ripe) were harvested and pooled within a six-plant plot, counted and weighed, and various quality assessments performed. Weekly yield per plant (yldpp) was calculated as the weekly yield divided by the number of plants per plot. Average fruit weight (avfrtwt) was calculated as the weekly yield divided by the number of fruit. 
 
 ## Construction of A-matrices
 Despite strawberry being octoploid, we used the option ploidy = 2 when constructing the A matrix in AGHmatrix due to its diploid-behaving manner. 
