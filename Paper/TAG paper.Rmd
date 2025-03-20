@@ -72,24 +72,8 @@ abstract: |
 
 bibliography: bibliography.bib
 
-header-includes: |
-  %% Per the spinger doc, new theorem styles can be included using built in style, 
-  %% but it seems the don't work so commented below
-  %\theoremstyle{thmstyleone}%
-  \newtheorem{theorem}{Theorem}%  meant for continuous numbers
-  %%\newtheorem{theorem}{Theorem}[section]% meant for sectionwise numbers
-  %% optional argument [theorem] produces theorem numbering sequence instead of independent numbers for Proposition
-  \newtheorem{proposition}[theorem]{Proposition}%
-  %%\newtheorem{proposition}{Proposition}% to get separate numbers for theorem and proposition etc.
-
-  %% \theoremstyle{thmstyletwo}%
-  \theoremstyle{remark}
-  \newtheorem{example}{Example}%
-  \newtheorem{remark}{Remark}%
-
-  %% \theoremstyle{thmstylethree}%
-  \theoremstyle{definition}
-  \newtheorem{definition}{Definition}%
+header-includes:
+  - \usepackage[T1]{fontenc}
 
 output: 
   bookdown::pdf_book:
@@ -126,6 +110,7 @@ knitr::opts_chunk$set(echo = FALSE,
 We found...
 
 \backmatter
+\newpage
 
 \bmhead{Supplementary information}
 
