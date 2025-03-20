@@ -1,6 +1,10 @@
 <!-- Methods -->
 
-While early studies of inheritance in octoploid strawberry found meiotic behavior to be a mix between disomic and polysomic [e.g. @LerceteauKohler2003], more recent studies have found that inheritance is disomic [@RousseauGueutin2008; @Tennessen2014; @Sargent2016; @Hardigan2020] and that analyses employing diploid Mendelian genetics are appropriate [@Pincot2021]. Therefore, we used the option ploidy = 2 when constructing the A matrix in AGHmatrix. 
+## Experimental design and phenotyping
+
+
+## Construction of A-matrices
+Despite strawberry being octoploid, we used the option ploidy = 2 when constructing the A matrix in AGHmatrix due to its diploid-behaving manner. 
 
 *If we do explore an octoploid A matrix and find that it is a better fit than diploid, then we should explore different levels of double reduction (the probability that two sister chromatids pass into the same gamete), as per @Amadeu2016.*
 
