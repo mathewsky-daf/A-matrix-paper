@@ -18,6 +18,7 @@ require(tidyverse)
 require(pedicure)
 require(asreml)
 require(dwreml)
+require(AGHmatrix)
 source("G:/Delivery/R&DDel/HortForestSc/Horticulture/STRWBERY/BREED/Katie/Strawberry Breeding Program/KMDR/ASBP_KMD_login.R")
 source("../../Analyses/00-functions/Pedigree4-Ngenerations.R")
 
@@ -80,7 +81,11 @@ ainv.ls <- lapply(ped.ls, function(x){x$self <- 0
                                       x.ped <- checkPed(x, self = "self", f = inb.founder, verbose = TRUE)
                                       a.ainv <- asreml::ainverse(x.ped, fgen = list("self", inb.founder))
                                       p.nrm <- pedicure::nrm(x.ped, self = "self", coi = NULL, f = inb.founder)
-                                      yy <- list("ped"=x.ped, "a.ainv" = a.ainv, "p.nrm" = p.nrm)
+                                      agh.2 <- solve(Amatrix(x.ped[, 1:3], ploidy = 2))
+                                      agh.8 <- solve(Amatrix(x.ped[, 1:3], ploidy = 8))
+                                      yy <- list("ped"=x.ped, "a.ainv" = a.ainv, 
+                                                 "p.nrm" = p.nrm, "agh.2" = agh.2,
+                                                 "agh.8" = agh.8)
                                       return(yy)
                                       })
 ## Tests to send to BC
@@ -99,7 +104,10 @@ ainv.ls <- lapply(ped.ls, function(x){x$self <- 0
 ainv.ls[[8]] <- ainv.ls[[7]]
 ainv.ls[[8]]$a.ainv <- AIsweep(ainv.ls[[8]]$a.ainv, keep = gkeep.name)
 ainv.ls[[8]]$p.nrm <- AIsweep(ainv.ls[[8]]$p.nrm, keep = gkeep.name)
-# KO getting this error 250319 for above line
+ainv.ls[[8]]$agh.2 <- NULL
+ainv.ls[[8]]$agh.8 <- NULL
+
+# KO getting this error 250319 for ainv.ls[[8]]$p.nrm <- AIsweep(ainv.ls[[8]]$p.nrm, keep = gkeep.name)
 # Error in y[(x[, 2] - 1) * nrow + x[, 1]] <- x[, 3] : 
 #   only 0's may be mixed with negative subscripts
 
