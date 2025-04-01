@@ -21,6 +21,7 @@ require(dwreml)
 require(AGHmatrix)
 source("G:/Delivery/R&DDel/HortForestSc/Horticulture/STRWBERY/BREED/Katie/Strawberry Breeding Program/KMDR/ASBP_KMD_login.R")
 source("../../Analyses/00-functions/Pedigree4-Ngenerations.R")
+source("../../Analyses/00-functions/mat2sparse.R")
 
 ## Import data ----
 load("G:/Delivery/R&DDel/HortForestSc/Horticulture/STRWBERY/BREED/BS22000/2023-24/1 Subtropical 2023-24/1 Maroochy/MRF Trials 2024/Analyses/Input/s2024-clean-spatial.RData")
@@ -79,10 +80,9 @@ tail(ped2)
 ## Generate Ainverse matrices --------------------------------------------------
 inb.founder <- 1-0.5^1
 
-x <- ped.ls[[1]]
+x <- ped.ls[[3]]
 
-#See if you can put in Genotypes names in stead of row and column
-
+#See if you can put in Genotypes names instead of row and column
 
 ainv.ls <- lapply(ped.ls, function(x){x$self <- 0
                                       x.ped <- checkPed(x, self = "self", f = inb.founder, verbose = TRUE)
@@ -96,77 +96,25 @@ ainv.ls <- lapply(ped.ls, function(x){x$self <- 0
                                                  "agh.8" = agh.8)
                                       return(yy)
                                       })
-## Tests to send to BC
-# a.ainv <- ainv.ls[[4]]$a.ainv
-# p.nrm <- ainv.ls[[4]]$p.nrm
-# mean(attr(a.ainv, 'inbreeding')[gkeep.name])
-# mean(attr(p.nrm, "F")[gkeep.name])
-# 
-# head(a.ainv)
-# head(p.nrm)
-# tail(a.ainv)
-# tail(p.nrm)
-
-
-#Now add in ainv for AIsweep
-ainv.ls[[8]] <- ainv.ls[[7]]
-ainv.ls[[8]]$a.ainv <- AIsweep(ainv.ls[[8]]$a.ainv, keep = gkeep.name)
-ainv.ls[[8]]$p.nrm <- AIsweep(ainv.ls[[8]]$p.nrm, keep = gkeep.name)
-ainv.ls[[8]]$agh.2 <- AIsweep(ainv.ls[[8]]$agh.2, keep = gkeep.name)
-ainv.ls[[8]]$agh.8 <- AIsweep(ainv.ls[[8]]$agh.8, keep = gkeep.name)
+# #Now add in ainv for AIsweep
+# ainv.ls[[8]] <- ainv.ls[[7]]
+# ainv.ls[[8]]$a.ainv <- AIsweep(ainv.ls[[8]]$a.ainv, keep = gkeep.name)
+# ainv.ls[[8]]$p.nrm <- AIsweep(ainv.ls[[8]]$p.nrm, keep = gkeep.name)
+# ainv.ls[[8]]$agh.2 <- AIsweep(ainv.ls[[8]]$agh.2, keep = gkeep.name)
+# ainv.ls[[8]]$agh.8 <- AIsweep(ainv.ls[[8]]$agh.8, keep = gkeep.name)
 
 # KO getting this error 250319 for ainv.ls[[8]]$p.nrm <- AIsweep(ainv.ls[[8]]$p.nrm, keep = gkeep.name)
 # Error in y[(x[, 2] - 1) * nrow + x[, 1]] <- x[, 3] : 
 #   only 0's may be mixed with negative subscripts
 
-names(ainv.ls) <- c(paste0("A", 2:7), "AF", "AI")
+names(ainv.ls) <- c(paste0("A", 2:7), "AF") #, "AI")
 
 unlist(lapply(ainv.ls, function(x) mean(attr(x$a.ainv,'inbreeding')[gkeep.name]))) #coefficient of inbreeding not returned for AIsweep
 unlist(lapply(ainv.ls, function(x) mean(attr(x$p.nrm,'F')[gkeep.name])))
 
 ## Compare the values from the different algorithms
-
 lapply(ainv.ls, function(x) {c(dim(x$a.ainv), dim(x$p.nrm), dim(x$agh.2), dim(x$agh.8))})
-# Curiously the ag.2 returns 1 less row for A5 and above
-
-lapply(ainv.ls, function(x) {lapply(x, function(x1) names(x1))})
-lapply(ainv.ls, function(x) {lapply(x, function(x1) is.matrix(x1))})
-
-x <- ainv.ls[[1]]
-cf0 <- lapply(ainv.ls, function(x) {x1 <- merge(as.data.frame(x$a.ainv), as.data.frame(x$p.nrm), by = c("row", "column"), all.x = TRUE)
-                                    x1 <- merge(as.data.frame(x1), as.data.frame(x$agh.2), by = c("row", "column"), all.x = TRUE)
-                                    x1 <- merge(as.data.frame(x1), as.data.frame(x$agh.8), by = c("row", "column"), all.x = TRUE)
-                                    x1 <- x1[order(x1$row, x1$column),]
-                                    names(x1) <- c("row", "column", "a.ainv", "p.nrm", "agh.2", "agh.8")
-                                    x1})
-cf0[[1]]
-str(cf0[[1]])
-cf0.cor <- lapply(cf0, function(x) cor(x[,3:6], use = "pairwise"))
-
-cf0.diff <- lapply(cf0, function(x) {x$ai.pn <- x$a.ainv - x$p.nrm
-                                     x$ai.a2 <- x$a.ainv - x$agh.2
-                                     x$ai.a8 <- x$a.ainv - x$agh.8
-                                     x$pn.a2 <- x$p.nrm - x$agh.2
-                                     x$pn.a8 <- x$p.nrm - x$agh.8
-                                     x$a2.a8 <- x$agh.2 - x$agh.8
-                                    return(x)})
-lapply(cf0.diff, function(x) summary(x$ai.pn))
-lapply(cf0.diff, function(x) summary(x$ai.a2))
-lapply(cf0.diff, function(x) summary(x$ai.a8))
-lapply(cf0.diff, function(x) summary(x$pn.a2))
-lapply(cf0.diff, function(x) summary(x$pn.a8))
-lapply(cf0.diff, function(x) summary(x$a2.a8))
-
-#Check where agh.2 has one less record than other calculations
-lapply(cf0.diff, function(x) x[is.na(x$agh.2)==TRUE,])
-x <- cf0.diff[[3]]
-head(x)
-subset(x, is.na(pn.a2)==TRUE)
-
-
-#p.rnm = agh.2 always.
-#A.inv is always different
-#agh.8 is different from agh.2 for all generation numbers
+# Curiously the ag.2 returns 1 less row for A4 does it for agh.8 too  A5 and above - investigating this with BC and DB
 
 ## Subset phenotypic data for traits of interest -------------------------------
 unique(d0$Trait)
