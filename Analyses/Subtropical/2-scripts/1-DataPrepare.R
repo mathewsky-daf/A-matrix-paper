@@ -18,10 +18,11 @@ require(tidyverse)
 require(pedicure)
 require(asreml)
 require(dwreml)
+require(dwrPlus)
 require(AGHmatrix)
 source("G:/Delivery/R&DDel/HortForestSc/Horticulture/STRWBERY/BREED/Katie/Strawberry Breeding Program/KMDR/ASBP_KMD_login.R")
 source("../../Analyses/00-functions/Pedigree4-Ngenerations.R")
-source("../../Analyses/00-functions/mat2sparse.R")
+#source("../../Analyses/00-functions/mat2sparse.R")
 
 ## Import data ----
 load("G:/Delivery/R&DDel/HortForestSc/Horticulture/STRWBERY/BREED/BS22000/2023-24/1 Subtropical 2023-24/1 Maroochy/MRF Trials 2024/Analyses/Input/s2024-clean-spatial.RData")
@@ -31,7 +32,6 @@ head(d0)
 
 ## Extract genotype names ----
 gkeep.name <- levels(d0$GKeep)
-
 
 ## Pedigree from KMDR ----
 kmd.login <- ASBP_KMD_login(katmandoo_url = "https://lavml093/strawberry") #mathewsk, see Edge for password
@@ -85,35 +85,28 @@ x <- ped.ls[[3]]
 #See if you can put in Genotypes names instead of row and column
 
 ainv.ls <- lapply(ped.ls, function(x){x$self <- 0
-                                      x.ped <- checkPed(x, self = "self", f = inb.founder, verbose = TRUE)
+                                      x$coi <- inb.founder
+                                      x.ped <- checkPed(x, coi="coi",f = inb.founder, verbose = TRUE)
                                       a.ainv <- asreml::ainverse(x.ped, fgen = list("self", inb.founder))
+                                      x.ped$self <- as.numeric(x.ped$self)
                                       p.nrm <- pedicure::nrm(x.ped, self = "self", coi = NULL, f = inb.founder, inverse = TRUE)
-                                      agh.2 <- mat2sparse(solve(Amatrix(x.ped[, 1:3], ploidy = 2)))
-                                      agh.8 <- mat2sparse(solve(Amatrix(x.ped[, 1:3], ploidy = 8)))
+                                      agh.2 <- mat2sparse(solve(Amatrix(x.ped[, 1:3], ploidy = 2)), tol = 1e-10)
+                                      dgh.2 <- mat2sparse(solve(Amatrix(x.ped[, 1:3], ploidy = 2, dominance = TRUE)), tol = 1e-10)
+                                      agh.8 <- mat2sparse(solve(Amatrix(x.ped[, 1:3], ploidy = 8)), tol = 1e-10)
                                       dimnames(a.ainv)[[2]] <- dimnames(p.nrm)[[2]] <- dimnames(agh.2)[[2]] <- dimnames(agh.8)[[2]] <- c("row", "column", "value")
                                       yy <- list("ped"=x.ped, "a.ainv" = a.ainv, 
                                                  "p.nrm" = p.nrm, "agh.2" = agh.2,
-                                                 "agh.8" = agh.8)
+                                                 "dgh.2" = dgh.2, "agh.8" = agh.8)
                                       return(yy)
                                       })
-# #Now add in ainv for AIsweep
-# ainv.ls[[8]] <- ainv.ls[[7]]
-# ainv.ls[[8]]$a.ainv <- AIsweep(ainv.ls[[8]]$a.ainv, keep = gkeep.name)
-# ainv.ls[[8]]$p.nrm <- AIsweep(ainv.ls[[8]]$p.nrm, keep = gkeep.name)
-# ainv.ls[[8]]$agh.2 <- AIsweep(ainv.ls[[8]]$agh.2, keep = gkeep.name)
-# ainv.ls[[8]]$agh.8 <- AIsweep(ainv.ls[[8]]$agh.8, keep = gkeep.name)
 
-# KO getting this error 250319 for ainv.ls[[8]]$p.nrm <- AIsweep(ainv.ls[[8]]$p.nrm, keep = gkeep.name)
-# Error in y[(x[, 2] - 1) * nrow + x[, 1]] <- x[, 3] : 
-#   only 0's may be mixed with negative subscripts
-
-names(ainv.ls) <- c(paste0("A", 2:7), "AF") #, "AI")
+names(ainv.ls) <- c(paste0("A", 2:7), "AF")
 
 unlist(lapply(ainv.ls, function(x) mean(attr(x$a.ainv,'inbreeding')[gkeep.name]))) #coefficient of inbreeding not returned for AIsweep
 unlist(lapply(ainv.ls, function(x) mean(attr(x$p.nrm,'F')[gkeep.name])))
 
 ## Compare the values from the different algorithms
-lapply(ainv.ls, function(x) {c(dim(x$a.ainv), dim(x$p.nrm), dim(x$agh.2), dim(x$agh.8))})
+lapply(ainv.ls, function(x) {c(dim(x$a.ainv), dim(x$p.nrm), dim(x$agh.2), dim(x$dgh.2), dim(x$agh.8))})
 # Curiously the ag.2 returns 1 less row for A4 does it for agh.8 too  A5 and above - investigating this with BC and DB
 
 ## Subset phenotypic data for traits of interest -------------------------------
