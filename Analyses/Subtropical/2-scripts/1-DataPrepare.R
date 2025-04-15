@@ -85,12 +85,10 @@ x <- ped.ls[[3]]
 #See if you can put in Genotypes names instead of row and column
 
 ainv.ls <- lapply(ped.ls, function(x){x$self <- 0
-                                      # x$coi <- inb.founder #need coi for new founders
-                                      # x$coi[!is.na(ped$self)] <- NA
-                                      x$coi <- as.numeric(NA)
+                                      x$coi <- inb.founder #need coi for new founders
+                                      x$coi[!is.na(x$self)] <- NA
                                       x.ped <- checkPed(x, self = "self", coi="coi",f = inb.founder, verbose = TRUE)
                                       a.ainv <- asreml::ainverse(x.ped, fgen = list("self", inb.founder))
-                                      x.ped$self <- as.numeric(x.ped$self)
                                       p.nrm <- pedicure::nrm(x.ped, self = "self", coi = NULL, f = inb.founder, inverse = TRUE)
                                       agh.2 <- mat2sparse(solve(Amatrix(x.ped[, 1:3], ploidy = 2)), tol = 1e-10)
                                       dgh.2 <- mat2sparse(solve(Amatrix(x.ped[, 1:3], ploidy = 2, dominance = TRUE)), tol = 1e-10)
