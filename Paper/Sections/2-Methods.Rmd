@@ -16,4 +16,4 @@ Despite strawberry being octoploid, we used the option ploidy = 2 when construct
 
 *If we do explore an octoploid A matrix and find that it is a better fit than diploid, then we should explore different levels of double reduction (the probability that two sister chromatids pass into the same gamete), as per @Amadeu2016.*
 
-Recent studies have found that a small amount of genetic variance could be attributed to dominance [@Feldmann2024; @Sleper2025]. Thus, we also constructed a dominance relationship matrix in AGHmatrix using the option dominance = TRUE. 
+Recent studies have found that a small amount of genetic variance could be attributed to dominance in strawberry [@Yamamoto2021; @Feldmann2024; @Sleper2025]. Thus, we also constructed a dominance relationship matrix in AGHmatrix using the option dominance = TRUE. 
