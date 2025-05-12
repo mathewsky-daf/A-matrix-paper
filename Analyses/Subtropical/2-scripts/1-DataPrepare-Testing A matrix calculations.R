@@ -79,14 +79,17 @@ tail(ped2)
 ## Generate Ainverse matrices --------------------------------------------------
 inb.founder <- 1-0.5^1
 
-x <- ped.ls[[1]]
+x <- ped.ls[[3]]
 
 #See if you can put in Genotypes names instead of row and column
 
 ainv.ls <- lapply(ped.ls, function(x){x$self <- 0
-                                      x.ped <- checkPed(x, self = "self", f = inb.founder, verbose = TRUE)
+                                      # x$coi <- inb.founder #need coi for new founders
+                                      # x$coi[!is.na(ped$self)] <- NA
+                                      x$coi <- as.numeric(NA)
+                                      x.ped <- checkPed(x, self = "self", coi="coi",f = inb.founder, verbose = TRUE)
                                       a.ainv <- asreml::ainverse(x.ped, fgen = list("self", inb.founder))
-                                      p.nrm <- pedicure::nrm(x.ped, self = "self", coi = NULL, f = inb.founder, inverse = TRUE)
+                                      p.nrm <- pedicure::nrm(x.ped, self = "self", coi = "coi", f = inb.founder, inverse = TRUE)
                                       agh.2 <- mat2sparse(solve(Amatrix(x.ped[, 1:3], ploidy = 2)))
                                       agh.8 <- mat2sparse(solve(Amatrix(x.ped[, 1:3], ploidy = 8)))
                                       dimnames(a.ainv)[[2]] <- dimnames(p.nrm)[[2]] <- dimnames(agh.2)[[2]] <- dimnames(agh.8)[[2]] <- c("row", "column", "value")
@@ -125,11 +128,13 @@ unlist(lapply(ainv.ls, function(x) mean(attr(x$p.nrm,'F')[gkeep.name])))
 ## Compare the values from the different algorithms
 lapply(ainv.ls, function(x) {c(dim(x$a.ainv), dim(x$p.nrm), dim(x$agh.2), dim(x$agh.8))})
 # Curiously the ag.2 returns 1 less row for A4 does it for agh.8 too  A5 and above
-x <- ped.ls[[3]] #names(ped.ls)
+x <- ped.ls[[4]] #names(ped.ls)
 x$self <- 0
 ped <- x
 save("ped", file = "4bc.RData")
-x.ped <- checkPed(x, self = "self", f = inb.founder, verbose = TRUE)
+x$coi <- inb.founder
+x.ped <- checkPed(x, coi="coi",f = inb.founder, verbose = TRUE)
+x.ped$self <- as.numeric(x.ped$self)
 a.ainv <- asreml::ainverse(x.ped, fgen = list("self", inb.founder))
 dimnames(a.ainv)[[2]] <- c("row", "column", "value")
 a.gen <- attr(a.ainv,"rowNames")
@@ -138,30 +143,36 @@ head(a.ainv)
 a.ainv <- as.data.frame(a.ainv)
 a.ainv$row <- a.gen[a.ainv$row]
 a.ainv$column <- a.gen[a.ainv$column]
+dim(a.ainv)
 
-p.nrm <- pedicure::nrm(x.ped, self = "self", coi = NULL, f = inb.founder, inverse = TRUE)
+p.nrm <- pedicure::nrm(x.ped, self = "self", coi = NULL, f = inb.founder, inverse = TRUE, zap=1e-10)
 dimnames(p.nrm)[[2]] <- c("row", "column", "value")
 p.gen <- attr(p.nrm, "rowNames")
 p.nrm <- as.data.frame(p.nrm)
 p.nrm$row <- p.gen[p.nrm$row]
 p.nrm$column <- p.gen[p.nrm$column]
 head(p.nrm)
+dim(p.nrm)
 
-agh.2 <- mat2sparse(solve(Amatrix(x.ped[, 1:3], ploidy = 2)))
+agh.2 <- mat2sparse(solve(Amatrix(x.ped[, 1:3], ploidy = 2)), tol = 1e-14)  # this makes it to dim(agh.2) = 2682
 dimnames(agh.2)[[2]] <- c("row", "column", "value")
 a2.gen <- attr(agh.2, "rowNames")
 agh.2 <- as.data.frame(agh.2)
 agh.2$row <- a2.gen[agh.2$row]
 agh.2$column <- a2.gen[agh.2$column]
 head(agh.2)
+dim(agh.2)
 
-agh.8 <- mat2sparse(solve(Amatrix(x.ped[, 1:3], ploidy = 8)))
+agh.8 <- mat2sparse(solve(Amatrix(x.ped[, 1:3], ploidy = 8)), tol = 1e-10)
 dimnames(agh.8)[[2]] <- c("row", "column", "value")
 a8.gen <- attr(agh.8, "rowNames")
 agh.8 <- as.data.frame(agh.8)
+# agh.8$row[a8.gen=="2015-068"]
+# agh.8$column[a8.gen=="Red_Rhapsody"]
 agh.8$row <- a8.gen[agh.8$row]
 agh.8$column <- a8.gen[agh.8$column]
 head(agh.8)
+dim(agh.8)
 
 x1 <- merge(as.data.frame(a.ainv), as.data.frame(p.nrm), by = c("row", "column"), all.x = TRUE)
 x1 <- merge(as.data.frame(x1), as.data.frame(agh.2), by = c("row", "column"), all.x = TRUE)
@@ -171,11 +182,18 @@ names(x1) <- c("row", "column", "a.ainv", "p.nrm", "agh.2", "agh.8")
 
 subset(x1, is.na(agh.2)==TRUE)
 subset(x1, is.na(agh.8)==TRUE)
+head(x1)
+subset(x1, row=="2015-068" & column=="Red_Rhapsody")
 
 # row       column a.ainv p.nrm agh.2        agh.8
 # # 283 2015-068 Red_Rhapsody      0     0    NA 0.0001900691
 # row       column a.ainv p.nrm agh.2        agh.8
 # 288 2015-068 Red_Rhapsody      0     0    NA 0.0002005186
+
+#KLM2025-05-12: shows that agh.2 is now 0 not NA.
+#      row       column a.ainv p.nrm        agh.2        agh.8
+# 2015-068 Red_Rhapsody      0     0 1.191516e-15 0.0001900691
+
 
 subset(ped2, Genotype %in% c("2015-068", "Red_Rhapsody"))
 # Genotype      FemaleParentName   MaleParentName
@@ -183,8 +201,8 @@ subset(ped2, Genotype %in% c("2015-068", "Red_Rhapsody"))
 # 2015-068         Red_Rhapsody          Tristan
 
 subset(ped2, FemaleParentName %in% "Red_Rhapsody")
-
-subset(x1, column=="Red_Rhapsody" & row=="2015-216")
+subset(ped2, FemaleParentName %in% "2015-068" |MaleParentName %in% "2015-068")
+subset(ped2, Genotype %in% "2015-216")
 
 #HHMMM.. what are A values...
 
