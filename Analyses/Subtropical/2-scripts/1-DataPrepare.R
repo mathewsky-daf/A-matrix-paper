@@ -78,7 +78,7 @@ ped2 <- checkPed(ped1)
 head(ped2)
 tail(ped2)
 ## Generate Ainverse matrices --------------------------------------------------
-inb.founder <- 1-0.5^1
+inb.founder <- 1e-06
 
 x <- ped.ls[[3]]
 
@@ -89,7 +89,7 @@ ainv.ls <- lapply(ped.ls, function(x){x$self <- 0
                                       x$coi[!is.na(x$self)] <- NA
                                       x.ped <- checkPed(x, self = "self", coi="coi",f = inb.founder, verbose = TRUE)
                                       a.ainv <- asreml::ainverse(x.ped, fgen = list("self", inb.founder))
-                                      p.nrm <- pedicure::nrm(x.ped, self = "self", coi = NULL, f = inb.founder, inverse = TRUE)
+                                      p.nrm <- pedicure::nrm(x.ped, self = "self", coi = NULL, f = inb.founder, inverse = TRUE, zap=1e-10)
                                       agh.2 <- mat2sparse(solve(Amatrix(x.ped[, 1:3], ploidy = 2)), tol = 1e-10)
                                       dgh.2 <- mat2sparse(solve(Amatrix(x.ped[, 1:3], ploidy = 2, dominance = TRUE)), tol = 1e-10)
                                       agh.8 <- mat2sparse(solve(Amatrix(x.ped[, 1:3], ploidy = 8)), tol = 1e-10)
@@ -100,14 +100,16 @@ ainv.ls <- lapply(ped.ls, function(x){x$self <- 0
                                       return(yy)
                                       })
 
-names(ainv.ls) <- c(paste0("A", 2:7), "AF")
-
 unlist(lapply(ainv.ls, function(x) mean(attr(x$a.ainv,'inbreeding')[gkeep.name]))) #coefficient of inbreeding not returned for AIsweep
 unlist(lapply(ainv.ls, function(x) mean(attr(x$p.nrm,'F')[gkeep.name])))
 
 ## Compare the values from the different algorithms
 lapply(ainv.ls, function(x) {c(dim(x$a.ainv), dim(x$p.nrm), dim(x$agh.2), dim(x$dgh.2), dim(x$agh.8))})
-# Curiously the ag.2 returns 1 less row for A4 does it for agh.8 too  A5 and above - investigating this with BC and DB
+# Curiously the ag.2 returns 1 less row for A4 above - investigating this with BC and DB
+#KLM2025-05-12: we thought it as about the tolerance level for mat2sparse being different for nrm, so we've made them the same in the above
+# but the problem remains- although it is now fixed for agh.8, except for A4...
+
+#KLM2025-05-12: my current thought is to leave the calculation as is, we can only manipulate it by changing the tolerance and that might be dataset dependent... 
 
 ## Subset phenotypic data for traits of interest -------------------------------
 unique(d0$Trait)
