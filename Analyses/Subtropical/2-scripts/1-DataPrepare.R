@@ -77,13 +77,11 @@ unlist(lapply(ped.ls, nrow))
 ped2 <- checkPed(ped1)
 head(ped2)
 tail(ped2)
+
 ## Generate Ainverse matrices --------------------------------------------------
 inb.founder <- 1e-06
 
-x <- ped.ls[[3]]
-
 #See if you can put in Genotypes names instead of row and column
-
 ainv.ls <- lapply(ped.ls, function(x){x$self <- 0
                                       x$coi <- inb.founder #need coi for new founders
                                       x$coi[!is.na(x$self)] <- NA
@@ -118,10 +116,36 @@ trait2keep <- yldtraits[grep("_w|cavfrtwt_endAug", yldtraits)]
 d1 <- data.frame(droplevels(subset(d0, Trait %in% trait2keep)))
 
 names(d1)
+head(d1)
+#Remove columns we don't need
+names2rm <- c("SiteName", "TrialTypeName", "TrialNumber", "Genotype.orig", "WorkingPlantdate", "Age", "Measurement_Age")
+d2 <- d1[, !names(d1) %in% names2rm]
+names(d2)
+d2$HarvestWeek <- factor(d2$HarvestWeek, levels = c(paste0("0", 4:9), 10:22, "endAug"))
+names(d2) <- gsub("Trait", "TH", names(d2))
+d2$Trait <- factor(unlist(lapply(strsplit(as.character(d2$TH), "_"), function(x) x[1])))
+d2 <- d2[order(d2$Trait, d2$Year, d2$HarvestWeek, d2$Plot),]
+head(d2)
+
+
+d2$TYH <- paste(d2$Trait, d2$Year, d2$HarvestWeek, sep = "_")
+d2$TYH <- factor(d2$TYH, levels = unique(d2$TYH))
+unique(d2$Trait)
+unique(d2$TYH)
+levels(d2$TYH)
+
+d2$GDrop <- as.character(d2$GDrop)
+d2$GDrop[d2$Genotype == "Phenomenal"] <- "Phenomenal"
+d2$GKeep[d2$Genotype == "Phenomenal"] <- NA
+d2$GDrop <- as.factor(d2$GDrop)
+d2$GKeep <- factor(d2$GKeep)
+d2$GDrop <- factor(d2$GDrop)
+
+levels(d2$GDrop)
 
 ## Output data for analyses ----------------------------------------------------
 
-save(list = c("d1", "ped.ls","ainv.ls"), file = paste0("3-RData/", Sys.Date(), "-Data4Analysis.RData"))
+save(list = c("d2", "ped.ls","ainv.ls"), file = paste0("3-RData/", Sys.Date(), "-Data4Analysis.RData"))
 
 
 #####################
