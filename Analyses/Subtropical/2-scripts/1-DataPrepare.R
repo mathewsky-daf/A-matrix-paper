@@ -112,40 +112,39 @@ lapply(ainv.ls, function(x) {c(dim(x$a.ainv), dim(x$p.nrm), dim(x$agh.2), dim(x$
 ## Subset phenotypic data for traits of interest -------------------------------
 unique(d0$Trait)
 yldtraits <- levels(d0$Trait)[grep("yldpp|avfrtwt", levels(d0$Trait))]
-trait2keep <- yldtraits[grep("_w|cavfrtwt_endAug", yldtraits)]
-d1 <- data.frame(droplevels(subset(d0, Trait %in% trait2keep)))
+trait2keep <- yldtraits[grep("_w|_endAug", yldtraits)]
 
-names(d1)
-head(d1)
 #Remove columns we don't need
 names2rm <- c("SiteName", "TrialTypeName", "TrialNumber", "Genotype.orig", "WorkingPlantdate", "Age", "Measurement_Age")
-d2 <- d1[, !names(d1) %in% names2rm]
-names(d2)
-d2$HarvestWeek <- factor(d2$HarvestWeek, levels = c(paste0("0", 4:9), 10:22, "endAug"))
-names(d2) <- gsub("Trait", "TH", names(d2))
-d2$Trait <- factor(unlist(lapply(strsplit(as.character(d2$TH), "_"), function(x) x[1])))
-d2 <- d2[order(d2$Trait, d2$Year, d2$HarvestWeek, d2$Plot),]
-head(d2)
 
 
-d2$TYH <- paste(d2$Trait, d2$Year, d2$HarvestWeek, sep = "_")
-d2$TYH <- factor(d2$TYH, levels = unique(d2$TYH))
-unique(d2$Trait)
-unique(d2$TYH)
-levels(d2$TYH)
+d1 <- data.frame(droplevels(subset(d0, Trait %in% trait2keep, select = names(d0[!names(d0) %in% names2rm]))))
 
-d2$GDrop <- as.character(d2$GDrop)
-d2$GDrop[d2$Genotype == "Phenomenal"] <- "Phenomenal"
-d2$GKeep[d2$Genotype == "Phenomenal"] <- NA
-d2$GDrop <- as.factor(d2$GDrop)
-d2$GKeep <- factor(d2$GKeep)
-d2$GDrop <- factor(d2$GDrop)
+d1$HarvestWeek <- factor(d1$HarvestWeek, levels = c(paste0("0", 4:9), 10:22, "endAug"))
+levels(d1$HarvestWeek)
+names(d1) <- gsub("Trait", "TH", names(d1))
+d1$Trait <- factor(unlist(lapply(strsplit(as.character(d1$TH), "_"), function(x) x[1])))
+d1 <- d1[order(d1$Trait, d1$Year, d1$HarvestWeek, d1$Plot),]
+head(d1)
 
-levels(d2$GDrop)
+d1$TYH <- paste(d1$Trait, d1$Year, d1$HarvestWeek, sep = "_")
+d1$TYH <- factor(d1$TYH, levels = unique(d1$TYH))
+unique(d1$Trait)
+unique(d1$TYH)
+levels(d1$TYH)
+
+d1$GDrop <- as.character(d1$GDrop)
+d1$GDrop[d1$Genotype == "Phenomenal"] <- "Phenomenal"
+d1$GKeep[d1$Genotype == "Phenomenal"] <- NA
+d1$GDrop <- as.factor(d1$GDrop)
+d1$GKeep <- factor(d1$GKeep)
+d1$GDrop <- factor(d1$GDrop)
+
+levels(d1$GDrop)
 
 ## Output data for analyses ----------------------------------------------------
 
-save(list = c("d2", "ped.ls","ainv.ls"), file = paste0("3-RData/", Sys.Date(), "-Data4Analysis.RData"))
+save(list = c("d1", "ped.ls","ainv.ls"), file = paste0("3-RData/", Sys.Date(), "-Data4Analysis.RData"))
 
 
 #####################
