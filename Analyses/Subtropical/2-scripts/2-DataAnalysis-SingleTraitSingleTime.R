@@ -22,10 +22,10 @@ require(asreml)
 ## Import data ----
 load(paste0("3-RData/", Sys.Date(), "-Data4Analysis.RData"))
 
-unique(d2$TYH)
+unique(d1$TYH)
 
 ## Data summary ----
-d.sum <- d2 %>% group_by(TYH) %>%
+d.sum <- d1 %>% group_by(TYH) %>%
   summarise(mean = mean(Value, na.rm = TRUE),
             nUniqueValue = length(unique(Value[is.na(Value)==FALSE])),
             nGeno = length(unique(Genotype[is.na(Value)==FALSE])),
@@ -37,14 +37,15 @@ d.sum <- d2 %>% group_by(TYH) %>%
              pcNAgeno = round(sum(sapply(split(Value, factor(GKeep)), function(x) all(is.na(x)))) / n_distinct(GKeep) * 100, 1))
 d.sum
 
-t.lt50NA <- d.sum$TYH[d.sum$pcNAplot < 50]
+t.lt50NA <- d.sum$TYH[d.sum$pcNAplot < 25]
 
-d3 <- droplevels(subset(d2, TYH %in% t.lt50NA))
+d2 <- droplevels(subset(d1, TYH %in% t.lt50NA))
 
 ## Loop over ainv.ls, TYH level -----
 asreml.options(ai.sing = TRUE)
 out.ls <- list()
 
+start.time <- Sys.time()
 for(i in 1:length(ainv.ls)){# i=1 
   a.tmp <- ainv.ls[[i]]
   a.tmp <- a.tmp[names(a.tmp) %in% c("ped", "a.ainv", "p.nrm", "agh.2", "agh.8")]  #this drops out dgh.2 cos model is different
@@ -72,12 +73,14 @@ for(i in 1:length(ainv.ls)){# i=1
                      residual =~ units,
                      data = d.tmp,
                      na.action = na.method(x = "include", y = "include"))
-      
       asr2 <- update(asr2)
       
       # Extract required info
       vc1 <- cbind.data.frame(term = rownames(summary(asr1)$varcomp), summary(asr1)$varcomp)
       vc2 <- cbind.data.frame(term = rownames(summary(asr2)$varcomp), summary(asr2)$varcomp)
+      
+      #Predictions
+      
       
       #Check if any terms are singular
       vc1Singular <- FALSE 
@@ -100,7 +103,7 @@ for(i in 1:length(ainv.ls)){# i=1
       nFamily <- n_distinct(ped.cy$Family[ped.cy$Genotype %in% unique(d.tmp$GKeep[is.na(d.tmp$Value)==FALSE & 
                                                                                     is.na(d.tmp$GKeep) == FALSE])])
       # Store calculations
-      nBlock = nBlock = nlevels(d.tmp$Block)
+      nBlock = levels(d.tmp$Block)
       genvar = vc1$component[grep("GKeep", vc1$term)]
       blockvar1 = vc1$component[grep("Block", vc1$term, fixed = TRUE)]
       resvar1 = vc1$component[grep("units", vc1$term)]
@@ -155,8 +158,14 @@ for(i in 1:length(ainv.ls)){# i=1
 out.df <- out.ls %>% bind_rows()
 
 
+save(out.df, file = paste0("3-RData/", today(), "SingleTraitSingleTime.RData"))
 
-# modesl from SimulatingMissingData.R
+end.time <- Sys.time()
+end.time - start.time  #KLM 1.82hours #1.65 hours
 
 
+save.image()
+
+
+load()
 
