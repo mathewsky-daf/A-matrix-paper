@@ -49,7 +49,7 @@ out.ls <- list()
 start.time <- Sys.time()
 ide.pred.ls <- list()
 pred.ls <- list()
-for(i in 1:nlevels(d2$TYH)){ # i=1
+for(i in 1:nlevels(d2$TYH)){ # i=1 
   tyh.tmp <- levels(d2$TYH)[i]
   d.tmp <- data.frame(droplevels(subset(d2, TYH == tyh.tmp)))
   
@@ -182,16 +182,16 @@ for(i in 1:nlevels(d2$TYH)){ # i=1
 } # end i loop: tyh
 
 out.df <- out.ls %>% bind_rows()
+names(pred.ls) <- levels(d2$TYH)[1:2]
+ppred.df <- pred.ls %>% bind_rows(.id = "TYH")
+ipred.df <- ide.pred.ls %>% bind_rows()
+head(ipred.df)
+names(ipred.df) <- gsub("Trait", "TYH", names(ipred.df))
 
-lapply(pred.ls, function(x) unique(x$Depth))
-lapply(pred.ls, function(x) unique(x$Type))
+pred.df <- merge(ipred.df, ppred.df, by = c("TYH", "GKeep"), all.y = TRUE)
 
-names(pred.ls)naheadmes(pred.ls)
 
-head(pred.ls[[1]])
-tail(pred.ls[[1]])
-
-save(list = c(out.df, file = paste0("3-RData/", today(), "SingleTraitSingleTime.RData"))
+save(list = c("out.df", "pred.df"), file = paste0("3-RData/", today(), "SingleTraitSingleTime.RData"))
 
 end.time <- Sys.time()
 end.time - start.time  #KLM 2hours 
