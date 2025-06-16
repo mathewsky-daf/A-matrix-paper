@@ -7,13 +7,18 @@ Plug plants were used each year at Nambour, with ASBP variety 'Red Rhapsody' use
 
 Trial design.
 
-The subtropical trials are planted in March (southern-hemisphere autumn), fruit begins to ripen in April or May, and harvest continues from first fruit through to the end of August (winter). The temperate trials are planted between April and June, with the first fruits ripening in October. Harvest continued through to the end of February in the 2021-22 season, end of March in 2022-23, end of May in 2023-24 and XXX in 2024-25. 
+The subtropical trials are planted in March (southern-hemisphere autumn), fruit begins to ripen in April or May, and harvest continues from first fruit through to the end of August (winter). The temperate trials are planted between April and June, with the first fruits ripening in October. Harvest continued through to the end of February in the 2021-22 season, end of March in 2022-23, and the middle May in both 2023-24 and 2024-25. 
 
 Each week, fruit (>70% ripe) were harvested and pooled within a six-plant plot, counted and weighed, and various quality assessments performed. Weekly yield per plant (yldpp) was calculated as the weekly yield divided by the number of plants per plot. Average fruit weight (avfrtwt) was calculated as the weekly yield divided by the number of fruit. 
 
 ## Construction of A-matrices
-Despite strawberry being octoploid, we used the option ploidy = 2 when constructing the A matrix in AGHmatrix due to its diploid-behaving manner. 
+Pedigree depths of two (i.e. the accessions present in the phenotypic data and their parents) to seven were used. The following methods were used to construct A-matrices: (i) ainverse function in asreml [@asremlr; @asreml], denoted as a.ainv; (ii) the nrm function in pedicure [@pedicure], denoted p.nrm; (iii) the Amatrix function with ploidy = 2 in AGHmatrix [@AGHmatrix], denoted agh.2; and (iv) the Amatrix function with ploidy = 8 in AGHmatrix [@AGHmatrix], denoted agh.8.
 
-*If we do explore an octoploid A matrix and find that it is a better fit than diploid, then we should explore different levels of double reduction (the probability that two sister chromatids pass into the same gamete), as per @Amadeu2016.*
+An inbreeding founder value of 1e-06 was used, and a tolerance/zap value of 1e-10 was used, as this is the unchangeable default in asreml. 
 
-Recent studies have found that a small amount of genetic variance could be attributed to dominance in strawberry [@Yamamoto2021; @Feldmann2024; @Sleper2025]. Thus, we also constructed a dominance relationship matrix in AGHmatrix using the option dominance = TRUE. 
+*If we find that an octoploid A matrix is a better fit than diploid, then we should explore different levels of double reduction (the probability that two sister chromatids pass into the same gamete), as per @Amadeu2016.*
+
+A-matrices were compared between methods within each pedigree depth using a Pearson Mantel test, using the mantel function in the vegan package [@vegan].
+
+## Construction of D-matrices
+Recent studies have found that a small amount of genetic variance could be attributed to dominance in strawberry [@Yamamoto2021; @Feldmann2024; @Sleper2025]. Thus, we also constructed a dominance relationship matrix using the Amatrix function and options dominance = TRUE and ploidy = 2 in AGHmatrix, denoted as dgh.2.

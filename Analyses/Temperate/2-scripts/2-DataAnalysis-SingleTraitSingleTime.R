@@ -21,7 +21,7 @@ require(asreml)
 
 ## Import data ----
 # load(paste0("3-RData/", Sys.Date(), "-Data4Analysis.RData"))
-load(paste0("3-RData/", "2025-05-15", "-Data4Analysis.RData"))
+load(paste0("3-RData/", "2025-05-23", "-Data4Analysis.RData"))
 
 unique(d1$TYH)
 
